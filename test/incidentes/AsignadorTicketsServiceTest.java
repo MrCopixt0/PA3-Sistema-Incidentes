@@ -15,4 +15,25 @@ public class AsignadorTicketsServiceTest {
         assertEquals(5.0, resultado, 0.001);
 
     }
+
+    @Test
+    public void testImpactoFueraDeRangoDeberiaLanzarExcepcion() {
+        AsignadorTicketsService service = new AsignadorTicketsService();
+
+        //verificamos que un impacto de 6 (inválido) lance un argumento "IllegalArgumentException"
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.calcularPrioridad(6, 3);
+        });
+    }
+
+    @Test
+    public void testGravedadFueraDeRangoDeberiaLanzarExcepcion() {
+        AsignadorTicketsService service = new AsignadorTicketsService();
+
+        //verificamos que una gravedad de 0 (inválida) lance "IllegalArgumentException"
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.calcularPrioridad(4, 0);
+        });
+    }
+
 }
