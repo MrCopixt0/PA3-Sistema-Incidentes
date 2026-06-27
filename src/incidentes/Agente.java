@@ -1,5 +1,7 @@
 package incidentes;
 import javax.persistence.*;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "agentes")
@@ -19,6 +21,10 @@ public class Agente {
 
     @Column(name = "carga_trabajo")
     private int cargaTrabajo;
+
+    //relación inversa
+    @OneToMany(mappedBy = "agenteAsignado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Ticket> tickets = new ArrayList<>();
 
     public Agente() {} //constructor vacio requerido por el ORM para instanciar objetos
 
