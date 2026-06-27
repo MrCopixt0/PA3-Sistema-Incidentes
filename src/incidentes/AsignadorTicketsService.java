@@ -13,4 +13,15 @@ public class AsignadorTicketsService {
             throw new IllegalArgumentException("El impacto y la gravedad deben estar entre 1 y 5");
         }
     }
+
+    public Agente asignarAgente(double prioridad, java.util.List<Agente> agentes) {
+
+        if (prioridad >= 4.0) {
+            //se busca al primer senior que encontremos
+            for (Agente a : agentes) {
+                if (a.getRol().equals("Senior")) return a;
+            }
+        }
+        return agentes.get(0); //comportamiento temporal
+    }
 }

@@ -36,4 +36,38 @@ public class AsignadorTicketsServiceTest {
         });
     }
 
+    @Test
+    public void testTicketAltaPrioridadDeberiaAsignarseAAgenteSenior() {
+        AsignadorTicketsService service = new AsignadorTicketsService();
+
+        //creamos una lista de agentes disponibles.
+        java.util.List<Agente> agentes = java.util.Arrays.asList(
+        new Agente("Pepe", "Senior", 0),
+        new Agente("Lucho", "Junior", 0)
+        );
+
+        double prioridad = service.calcularPrioridad(5, 4);
+        Agente agenteAsignado = service.asignarAgente(prioridad, agentes);
+
+        assertNotNull(agenteAsignado, "Se debería haber asignado un agente");
+        assertEquals("Senior", agenteAsignado.getRol(), "Los tickets con prioridad >= 4.0 deben ir a un Senior");
+    }
+
+    @Test
+    public void testAlgoritmoGreedyDeberiaAsignarAlSeniorConMenorCarga() {
+
+        AsignadorTicketsService service = new AsignadorTicketsService();
+
+        java.util.List<Agente> agentes = java.util.Arrays.asList(
+                new Agente("Pepe", "Senior", 5),
+                new Agente("Juan", "Senior", 0)
+        );
+
+        double prioridad = service.calcularPrioridad(5, 5); //senior requerido
+        Agente agenteAsignado = service.asignarAgente(prioridad, agentes);
+
+        assertNotNull(agenteAsignado);
+        assertEquals("Juan", agenteAsignado.getNombre(), "Debes elegir a Juan por tener menor carga");
+
+    }
 }
