@@ -15,13 +15,17 @@ public class AsignadorTicketsService {
     }
 
     public Agente asignarAgente(double prioridad, java.util.List<Agente> agentes) {
+        String rolRequerido = (prioridad >= 4.0) ? "Senior" : "Junior";
+        Agente mejorAgente = null;
 
-        if (prioridad >= 4.0) {
-            //se busca al primer senior que encontremos
-            for (Agente a : agentes) {
-                if (a.getRol().equals("Senior")) return a;
+        for (Agente a : agentes) {
+            if (a.getRol().equals(rolRequerido)) {
+                //se aplica greedy
+                if (mejorAgente == null || a.getCargaTrabajo() < mejorAgente.getCargaTrabajo()) {
+                    mejorAgente = a;
+                }
             }
         }
-        return agentes.get(0); //comportamiento temporal
+        return mejorAgente;
     }
 }
