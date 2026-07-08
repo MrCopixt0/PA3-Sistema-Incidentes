@@ -1,5 +1,7 @@
 package incidentes;
-import javax.persistence.*;
+
+import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -24,6 +26,7 @@ public class Agente {
 
     //relación inversa
     @OneToMany(mappedBy = "agenteAsignado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Ticket> tickets = new ArrayList<>();
 
     public Agente() {} //constructor vacio requerido por el ORM para instanciar objetos

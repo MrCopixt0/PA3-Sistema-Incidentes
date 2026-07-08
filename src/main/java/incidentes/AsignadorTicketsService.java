@@ -1,6 +1,9 @@
 package incidentes;
+
+import org.springframework.stereotype.Service;
 import java.util.List;
 
+@Service
 public class AsignadorTicketsService {
 
     private final AgenteRepository agenteRepository;
@@ -9,18 +12,16 @@ public class AsignadorTicketsService {
     //inyectamos las dependencias de los repositorios del ORM
 
     public AsignadorTicketsService(AgenteRepository agenteRepository, TicketRepository ticketRepository) {
-
         this.agenteRepository = agenteRepository;
         this.ticketRepository = ticketRepository;
     }
 
-    public double calcularPrioridad(int impacto, int gravedad){
+    public double calcularPrioridad(int impacto, int gravedad) {
         validarRangos(impacto, gravedad);
         return (impacto * 0.6) + (gravedad * 0.4);
     }
 
     private void validarRangos(int impacto, int gravedad) {
-
         if (impacto < 1 || impacto > 5 || gravedad < 1 || gravedad > 5) {
             throw new IllegalArgumentException("El impacto y la gravedad deben estar entre 1 y 5");
         }
@@ -34,7 +35,8 @@ public class AsignadorTicketsService {
         String rolRequerido = (prioridad >= 4.0) ? "Senior" : "Junior";
 
         //esto consultara los agentes aptos directamente desde la base de datos via ORM
-        List<Agente> agentesDisponibles = agenteRepository.buscarPorRol(rolRequerido);
+        //Adaptacion a la nomenclatura de Spring Data JPA :v
+        List<Agente> agentesDisponibles = agenteRepository.findByRol(rolRequerido);
 
         Agente mejorAgente = null;
         for (Agente a : agentesDisponibles) {
@@ -49,12 +51,10 @@ public class AsignadorTicketsService {
             mejorAgente.setCargaTrabajo(mejorAgente.getCargaTrabajo() + 1);
 
             //sincronizamos la nueva carga de trabajo en la BD
-            agenteRepository.guardar(mejorAgente);
+            //adaptado a save()
+            agenteRepository.save(mejorAgente);
         }
-        //se guarda el ticket
-        ticketRepository.guardar(ticket);
-
-        return ticket;
+        return ticketRepository.save(ticket); // guardamos y retornamos el ticket guardado.
     }
 
 }
